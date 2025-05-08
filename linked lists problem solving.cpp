@@ -7,7 +7,104 @@ struct ListNode {
     ListNode(int x, ListNode* next) : val(x), next(next) {}
 };
 
+class MyLinkedList {
+private:
+    Node* head;
+    Node* tail;
+    int length;
 
+public:
+    MyLinkedList() : head(nullptr), tail(nullptr), length(0) {}
+
+    int get(int index) {
+        if (index < 0 || index >= length) return -1;
+
+        Node* cur;
+        if (index <= length / 2) {
+            cur = head;
+            for (int i = 0; i < index; ++i)
+                cur = cur->next;
+        } else {
+            cur = tail;
+            for (int i = length - 1; i > index; --i)
+                cur = cur->prev;
+        }
+        return cur->val;
+    }
+
+    void addAtHead(int val) {
+        Node* newNode = new Node(val);
+        if (!head) {
+            head = tail = newNode;
+        } else {
+            newNode->next = head;
+            head->prev = newNode;
+            head = newNode;
+        }
+        length++;
+    }
+
+    void addAtTail(int val) {
+        Node* newNode = new Node(val);
+        if (!tail) {
+            head = tail = newNode;
+        } else {
+            tail->next = newNode;
+            newNode->prev = tail;
+            tail = newNode;
+        }
+        length++;
+    }
+
+    void addAtIndex(int index, int val) {
+        if (index < 0 || index > length) return;
+
+        if (index == 0) {
+            addAtHead(val);
+        } else if (index == length) {
+            addAtTail(val);
+        } else {
+            Node* cur = head;
+            for (int i = 0; i < index; ++i)
+                cur = cur->next;
+
+            Node* newNode = new Node(val);
+            newNode->prev = cur->prev;
+            newNode->next = cur;
+            cur->prev->next = newNode;
+            cur->prev = newNode;
+            length++;
+        }
+    }
+
+    void deleteAtIndex(int index) {
+        if (index < 0 || index >= length) return;
+
+        Node* cur = head;
+        for (int i = 0; i < index; ++i)
+            cur = cur->next;
+
+        if (cur->prev) cur->prev->next = cur->next;
+        else head = cur->next;
+
+        if (cur->next) cur->next->prev = cur->prev;
+        else tail = cur->prev;
+
+        delete cur;
+        length--;
+    }
+
+    ~MyLinkedList() {
+        Node* cur = head;
+        while (cur) {
+            Node* next = cur->next;
+            delete cur;
+            cur = next;
+        }
+    }
+};
+
+///////////////////////////
 class Solution {
 public:
     void print(ListNode* head)
