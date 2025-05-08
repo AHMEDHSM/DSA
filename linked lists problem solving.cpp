@@ -53,6 +53,38 @@ public:
             first = tmp1;
             second = tmp2;
         }
+bool isPalindrome(ListNode* head) {
+   vector<int>v;
+   ListNode*cur=head;
+    while(cur)
+    {
+        v.push_back(cur->val);
+        cur=cur->next;
+    }
+    int left=0,right=v.size()-1;
+        while(left<right)
+            {
+                if(v[left]!=v[right])
+                    return false;
+                    left++;
+                    right--;
+            }
+            return true;
+    }
+
+    bool isPalindrome(ListNode* head) {
+        ListNode *slow = head, *fast = head, *prev, *temp;
+        while (fast && fast->next)
+            slow = slow->next, fast = fast->next->next;
+        prev = slow, slow = slow->next, prev->next = NULL;
+        while (slow)
+            temp = slow->next, slow->next = prev, prev = slow, slow = temp;
+        fast = head, slow = prev;
+        while (slow)
+            if (fast->val != slow->val) return false;
+            else fast = fast->next, slow = slow->next;
+        return true;
+    }
 
     }
 };
